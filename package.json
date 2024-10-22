@@ -10,6 +10,11 @@
     "dev-css": "tailwindcss -i ./src/assets/input.css -o ./src/assets/output.css --watch"
   },
   "dependencies": {
+    "@fortawesome/fontawesome-free": "^6.6.0",
+    "@fortawesome/fontawesome-svg-core": "^6.6.0",
+    "@fortawesome/free-solid-svg-icons": "^6.6.0",
+    "@fortawesome/vue-fontawesome": "^3.0.8",
+    "pinia": "^2.2.4",
     "vue": "^3.5.12"
   },
   "devDependencies": {
