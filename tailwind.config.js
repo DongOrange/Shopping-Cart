@@ -7,6 +7,7 @@ export default {
         primary:"#003a66",
         secondary:"#FFBF00",
         accent:"#EF2D56",
+        fourth:"#0c85e1",
       }
     },
   },

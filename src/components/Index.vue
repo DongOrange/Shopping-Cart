@@ -4,7 +4,7 @@ import { ref } from 'vue';
 
 <template>
     <div class="flex gap-10 relative items-start">
-        <div class="w-1/3 sticky top-3.5 left-0">
+        <div class="w-1/4 sticky top-3.5 left-0">
             <h2 class="text-xl font-bold mb-5"><font-awesome-icon icon="basket-shopping" /> 我的購物車</h2>
             <div class="space-y-4">
                 <div class="border-b border-[#cccccc] pb-4">
@@ -41,9 +41,9 @@ import { ref } from 'vue';
                 <div class="w-20"><button class="bg-secondary px-2 h-9 rounded w-full font-bold">新增</button></div>
             </div>
             <div>
-                <div class="flex gap-2 bg-primary py-1.5 px-2">
+                <div class="flex gap-2 bg-fourth py-1.5 px-2">
                     <div class="flex-auto flex gap-2 items-center">
-                        <div class="bg-white px-2 py-px text-xs">優惠碼</div>
+                        <div class="bg-white px-2 py-px text-xs text-fourth">優惠碼</div>
                         <div class="text-white">SAVE10</div>
                     </div>
                     <div class="text-white cursor-pointer"><font-awesome-icon icon="trash-can" /></div>
