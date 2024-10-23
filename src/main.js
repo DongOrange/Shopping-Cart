@@ -6,9 +6,9 @@ import App from './App.vue'
 import './assets/output.css'
 import { library } from '@fortawesome/fontawesome-svg-core';
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome';
-import { faBasketShopping,faCartShopping,faPlus,faMinus,faTrashCan } from '@fortawesome/free-solid-svg-icons';
+import { faBasketShopping,faCartShopping,faPlus,faMinus,faTrashCan,faCashRegister } from '@fortawesome/free-solid-svg-icons';
 
-library.add(faBasketShopping,faCartShopping,faPlus,faMinus,faTrashCan);
+library.add(faBasketShopping,faCartShopping,faPlus,faMinus,faTrashCan,faCashRegister);
 
 const pinia = createPinia();
 const app = createApp(App);

@@ -34,12 +34,27 @@ import { ref } from 'vue';
                         </div>
                         <div class="">NT$ 1000</div>
                     </div>
-                </div>
-                <div class="flex gap">
-                    <div class=""></div>
-                    <div class="w-20"></div>
-                </div>
+                </div>    
             </div>
+            <div class="flex gap-2 py-4">
+                <div class="flex-auto"><input type="text" class="h-9 px-2 w-full rounded" placeholder="請輸入優惠碼"></div>
+                <div class="w-20"><button class="bg-secondary px-2 h-9 rounded w-full font-bold">新增</button></div>
+            </div>
+            <div>
+                <div class="flex gap-2 bg-primary py-1.5 px-2">
+                    <div class="flex-auto flex gap-2 items-center">
+                        <div class="bg-white px-2 py-px text-xs">優惠碼</div>
+                        <div class="text-white">SAVE10</div>
+                    </div>
+                    <div class="text-white cursor-pointer"><font-awesome-icon icon="trash-can" /></div>
+                </div>
+                <div class="text-gray-500 text-right pt-2 text-sm">使用優惠碼節省了 <span class="text-accent">NT$ 1000</span></div>
+            </div>
+            <div class="mt-10 border-b border-[#cccccc] pb-5 flex justify-between">
+                <div class="text-xl">總金額 </div>
+                <div class="text-xl font-bold">NT$ 5000</div>
+            </div>
+            <div class="mt-8"><button class="text-white text-lg bg-primary text-center rounded-full w-full h-12"><font-awesome-icon icon="cash-register" /> 結帳</button></div>
         </div>
         <div class="flex-1 flex flex-wrap -ml-5">
             <div class="flex w-1/3 pl-5 pb-5 box-border">
