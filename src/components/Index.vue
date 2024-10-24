@@ -1,5 +1,5 @@
 <script setup>
-import { ref } from 'vue';
+import { ref,computed } from 'vue';
 
 const list = ref([
   { id: 1, name: "智能手機", price: 5999, image: "https://picsum.photos/id/1/200", maxQuantity: 5 },
@@ -38,6 +38,12 @@ const decreaseQuantity = (cartItem) => {
     cartItem.quantity -= 1;
   }
 };
+
+const totalPrice = computed(() => {
+    return cart.value.reduce((total, cartItem) => {
+        return total + cartItem.price * cartItem.quantity;
+    }, 0);
+});
 </script>
 
 <template>
@@ -101,7 +107,7 @@ const decreaseQuantity = (cartItem) => {
             </div>
             <div class="mt-10 border-b border-[#cccccc] pb-5 flex justify-between">
                 <div class="text-xl">總金額 </div>
-                <div class="text-xl font-bold">NT$ 5000</div>
+                <div class="text-xl font-bold">NT$ {{ totalPrice }}</div>
             </div>
             <div class="mt-8"><button class="text-white text-lg bg-primary text-center rounded-full w-full h-12"><font-awesome-icon icon="cash-register" /> 結帳</button></div>
         </div>
