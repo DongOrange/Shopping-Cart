@@ -1,20 +1,22 @@
-# shopping-cart
+# Shopping-Cart
 
-This template should help get you started developing with Vue 3 in Vite.
+網站尚在建置中
 
-## Project Setup
+![index](./public/pc_img.jpg)
+
+## 專案的運行方式
 
 ```sh
 npm install
 ```
 
-### Compile and Hot-Reload for Development
+### 執行專案
 
 ```sh
 npm run dev
 ```
 
-### Compile and Minify for Production
+### Vite 打包
 
 ```sh
 npm run build
