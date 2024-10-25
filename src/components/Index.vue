@@ -1,5 +1,5 @@
 <script setup>
-import { ref,computed } from 'vue';
+import { ref,computed,onMounted, onUnmounted } from 'vue';
 
 const list = ref([
   { id: 1, name: "智能手機", price: 5999, image: "https://picsum.photos/id/1/200", maxQuantity: 5 },
@@ -44,13 +44,34 @@ const totalPrice = computed(() => {
         return total + cartItem.price * cartItem.quantity;
     }, 0);
 });
+
+const isDisplay = ref(true);
+const isMobile = ref(false);
+
+const mobCartToggle = () =>{
+    isDisplay.value = !isDisplay.value
+};
+
+const checkIfMobile = () => {
+  isMobile.value = window.innerWidth <= 768;
+};
+
+onMounted(() => {
+  checkIfMobile();
+  window.addEventListener('resize', checkIfMobile);
+});
+
+onUnmounted(() => {
+  window.removeEventListener('resize', checkIfMobile);
+});
+
 </script>
 
 <template>
-    <div class="flex gap-10 relative items-start">
-        <div class="flex-1">
-            <ul class="flex flex-wrap -ml-5">
-                <li v-for="item in list" :key="item.id" class="flex w-1/3 pl-5 pb-5 box-border">
+    <div class="flex flex-wrap gap-10 relative items-start mb-20 md:mb-0 lg:mb-0">
+        <div class="w-full flex-none md:flex-1 lg:flex-1">
+            <ul class="flex flex-wrap md:-ml-5 lg:-ml-5">
+                <li v-for="item in list" :key="item.id" class="flex pb-5 box-border w-full md:w-1/2 lg:w-1/3 md:pl-5 lg:pl-5">
                     <div class="w-full bg-white px-3 py-4 shadow-lg rounded-lg">
                         <div class="relative w-full aspect-square mb-4"><img class="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-full" :src="item.image"></div>
                         <h3 class="text-xl mb-4 text-center">{{ item.name }}</h3>
@@ -67,51 +88,57 @@ const totalPrice = computed(() => {
                 </li>
             </ul>
         </div>
-        <div class="w-1/4 sticky top-3.5 left-0">
-            <h2 class="text-xl font-bold mb-5"><font-awesome-icon icon="basket-shopping" /> 我的購物車</h2>
-            <ul class="space-y-4">
-                <li v-for="cartItem in cart" :key="cartItem.id" class="border-b border-[#cccccc] pb-4">
-                    <div class="flex gap-4 justify-between">
-                    <div class="mb-4">{{ cartItem.name }}</div>
-                    <div class="text-accent cursor-pointer" @click="removeFromCart(cartItem.id)">
-                        <font-awesome-icon icon="trash-can" />
-                    </div>
-                    </div>
-                    <div class="flex gap-4 justify-between">
-                    <div class="flex items-center">
-                        <div class="w-5 h-5 leading-5 bg-primary text-xs text-white text-center rounded-md cursor-pointer" @click="decreaseQuantity(cartItem)">
-                        <font-awesome-icon icon="minus" />
+        <div v-if="isDisplay || !isMobile" class="w-full h-dvh p-4 fixed z-50 top-0 bg-primary md:top-3.5 lg:top-3.5 left-0 md:w-1/3 lg:w-1/4 md:sticky lg:sticky md:h-auto lg:h-auto md:bg-transparent lg:bg-transparent md:p-0 lg:p-0">
+            <div class="h-full overflow-y-auto bg-gray-200 p-8 md:bg-transparent lg:bg-transparent md:p-0 lg:p-0">
+                <div @click="mobCartToggle" class="absolute top-6 right-8 text-3xl block cursor-pointer md:hidden lg:hidden"><font-awesome-icon icon="xmark" /></div>
+                <h2 class="text-xl font-bold mb-5"><font-awesome-icon icon="basket-shopping" /> 我的購物車</h2>
+                <ul class="space-y-4 overflow-y-auto max-h-40 md:max-h-72 lg:max-h-72">
+                    <li v-for="cartItem in cart" :key="cartItem.id" class="border-b border-[#cccccc] pb-4">
+                        <div class="flex gap-4 justify-between">
+                        <div class="mb-4">{{ cartItem.name }}</div>
+                        <div class="text-accent cursor-pointer" @click="removeFromCart(cartItem.id)">
+                            <font-awesome-icon icon="trash-can" />
                         </div>
-                        <div class="min-w-8 text-center">{{ cartItem.quantity }}</div>
-                        <div class="w-5 h-5 leading-5 bg-primary text-xs text-white text-center rounded-md cursor-pointer" @click="increaseQuantity(cartItem)">
-                        <font-awesome-icon icon="plus" />
                         </div>
-                    </div>
-                    <div>NT$ {{ cartItem.price * cartItem.quantity }}</div>
-                    </div>
-                </li>
-            </ul>
-            <div class="flex gap-2 py-4">
-                <div class="flex-auto"><input type="text" class="h-9 px-2 w-full rounded" placeholder="請輸入優惠碼"></div>
-                <div class="w-20"><button class="bg-secondary px-2 h-9 rounded w-full font-bold">新增</button></div>
-            </div>
-            <div>
-                <div class="flex gap-2 bg-fourth py-1.5 px-2">
-                    <div class="flex-auto flex gap-2 items-center">
-                        <div class="bg-white px-2 py-px text-xs text-fourth">優惠碼</div>
-                        <div class="text-white">SAVE10</div>
-                    </div>
-                    <div class="text-white cursor-pointer"><font-awesome-icon icon="trash-can" /></div>
+                        <div class="flex gap-4 justify-between">
+                        <div class="flex items-center">
+                            <div class="w-5 h-5 leading-5 bg-primary text-xs text-white text-center rounded-md cursor-pointer" @click="decreaseQuantity(cartItem)">
+                            <font-awesome-icon icon="minus" />
+                            </div>
+                            <div class="min-w-8 text-center">{{ cartItem.quantity }}</div>
+                            <div class="w-5 h-5 leading-5 bg-primary text-xs text-white text-center rounded-md cursor-pointer" @click="increaseQuantity(cartItem)">
+                            <font-awesome-icon icon="plus" />
+                            </div>
+                        </div>
+                        <div>NT$ {{ cartItem.price * cartItem.quantity }}</div>
+                        </div>
+                    </li>
+                </ul>
+                <div class="flex gap-2 py-4">
+                    <div class="flex-auto"><input type="text" class="h-9 px-2 w-full rounded" placeholder="請輸入優惠碼"></div>
+                    <div class="w-20"><button class="bg-secondary px-2 h-9 rounded w-full font-bold">新增</button></div>
                 </div>
-                <div class="text-gray-500 text-right pt-2 text-sm">使用優惠碼節省了 <span class="text-accent">NT$ 1000</span></div>
+                <div>
+                    <div class="flex gap-2 bg-fourth py-1.5 px-2">
+                        <div class="flex-auto flex gap-2 items-center">
+                            <div class="bg-white px-2 py-px text-xs text-fourth">優惠碼</div>
+                            <div class="text-white">SAVE10</div>
+                        </div>
+                        <div class="text-white cursor-pointer"><font-awesome-icon icon="trash-can" /></div>
+                    </div>
+                    <div class="text-gray-500 text-right pt-2 text-sm">使用優惠碼節省了 <span class="text-accent">NT$ 1000</span></div>
+                </div>
+                <div class="mt-10 border-b border-[#cccccc] pb-5 flex justify-between">
+                    <div class="text-xl">總金額 </div>
+                    <div class="text-xl font-bold">NT$ {{ totalPrice }}</div>
+                </div>
+                <div class="mt-8"><button class="text-white text-lg bg-primary text-center rounded-full w-full h-12"><font-awesome-icon icon="cash-register" /> 結帳</button></div>
             </div>
-            <div class="mt-10 border-b border-[#cccccc] pb-5 flex justify-between">
-                <div class="text-xl">總金額 </div>
-                <div class="text-xl font-bold">NT$ {{ totalPrice }}</div>
-            </div>
-            <div class="mt-8"><button class="text-white text-lg bg-primary text-center rounded-full w-full h-12"><font-awesome-icon icon="cash-register" /> 結帳</button></div>
         </div>
-        
+        <div @click="mobCartToggle" class="fixed w-full bottom-0 left-0 z-30 flex gap-2 justify-center p-4 cursor-pointer bg-primary text-lg text-white md:hidden lg:hidden">
+            <div class=""><font-awesome-icon icon="basket-shopping" /></div>
+            <div class="">我的購物車 ({{ cart.length }})</div>
+        </div>
     </div>
 </template>
 
