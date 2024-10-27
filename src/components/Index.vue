@@ -45,7 +45,7 @@ const totalPrice = computed(() => {
     }, 0);
 });
 
-const isDisplay = ref(true);
+const isDisplay = ref(false);
 const isMobile = ref(false);
 
 const mobCartToggle = () =>{
@@ -54,6 +54,9 @@ const mobCartToggle = () =>{
 
 const checkIfMobile = () => {
   isMobile.value = window.innerWidth <= 768;
+  if (isMobile.value) {
+        isDisplay.value = false;
+  }
 };
 
 onMounted(() => {
