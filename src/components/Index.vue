@@ -14,7 +14,16 @@ const list = ref([
   { id: 10, name: "外接硬碟", price: 1599, image: "https://picsum.photos/id/10/200", maxQuantity: 10 }
 ]);
 
+const discountCodes = ref([
+  { code: "SAVE10", type: "percentage", value: 10 },
+  { code: "SAVE20", type: "percentage", value: 20 },
+  { code: "MINUS100", type: "fixed", value: 100 },
+  { code: "MINUS500", type: "fixed", value: 500 },
+])
+
 const cart = ref([]);
+const appliedDiscount = ref(null); // 用於存儲當前應用的優惠碼
+const discountInput = ref(''); // 優惠碼輸入框的值
 
 const addToCart = (item) => {
   const existingItem = cart.value.find(cartItem => cartItem.id === item.id);
@@ -40,10 +49,51 @@ const decreaseQuantity = (cartItem) => {
 };
 
 const totalPrice = computed(() => {
-    return cart.value.reduce((total, cartItem) => {
+    let total = cart.value.reduce((total, cartItem) => {
         return total + cartItem.price * cartItem.quantity;
     }, 0);
+
+    // 計算折扣
+    if (appliedDiscount.value) { // 確保有應用的優惠碼
+        if (appliedDiscount.value.type === "percentage") {
+            total -= (total * (appliedDiscount.value.value / 100));
+        } else if (appliedDiscount.value.type === "fixed") {
+            total -= appliedDiscount.value.value;
+        }
+    }
+
+    return total < 0 ? 0 : total; // 確保總價不為負數
 });
+
+const calculateSavings = computed(() => {
+    if (!appliedDiscount.value) return 0; // 沒有應用的折扣碼
+
+    if (appliedDiscount.value.type === 'percentage') {
+        // 確保 totalPrice.value 不為 0
+        return totalPrice.value > 0 ? (totalPrice.value * (appliedDiscount.value.value / 100)) : 0;
+    } else if (appliedDiscount.value.type === 'fixed') {
+        return appliedDiscount.value.value;
+    }
+    return 0; // 預防其他情況
+});
+
+const applyDiscount = () => {
+    const discount = discountCodes.value.find(code => code.code === discountInput.value);
+    if (discount) {
+        if (appliedDiscount.value) {
+            alert('請先刪除當前的優惠碼！'); // 提示用戶先刪除舊優惠碼
+        } else {
+            appliedDiscount.value = discount; // 儲存新的優惠碼
+            discountInput.value = ''; // 清空輸入框
+        }
+    } else {
+        alert('無效的優惠碼！'); // 提示用戶優惠碼無效
+    }
+};
+
+const removeDiscount = () => {
+  appliedDiscount.value = null; // 清除應用的優惠碼
+};
 
 const isDisplay = ref(false);
 const isMobile = ref(false);
@@ -118,18 +168,18 @@ onUnmounted(() => {
                     </li>
                 </ul>
                 <div class="flex gap-2 py-4">
-                    <div class="flex-auto"><input type="text" class="h-9 px-2 w-full rounded" placeholder="請輸入優惠碼"></div>
-                    <div class="w-20"><button class="bg-secondary px-2 h-9 rounded w-full font-bold">新增</button></div>
+                    <div class="flex-auto"><input v-model="discountInput" type="text" class="h-9 px-2 w-full rounded" placeholder="請輸入優惠碼"></div>
+                    <div class="w-20"><button @click="applyDiscount" class="bg-secondary px-2 h-9 rounded w-full font-bold">新增</button></div>
                 </div>
-                <div>
+                <div v-if="appliedDiscount">
                     <div class="flex gap-2 bg-fourth py-1.5 px-2">
                         <div class="flex-auto flex gap-2 items-center">
                             <div class="bg-white px-2 py-px text-xs text-fourth">優惠碼</div>
-                            <div class="text-white">SAVE10</div>
+                            <div class="text-white">{{ appliedDiscount.code }}</div>
                         </div>
-                        <div class="text-white cursor-pointer"><font-awesome-icon icon="trash-can" /></div>
+                        <div @click="removeDiscount" class="text-white cursor-pointer"><font-awesome-icon icon="trash-can" /></div>
                     </div>
-                    <div class="text-gray-500 text-right pt-2 text-sm">使用優惠碼節省了 <span class="text-accent">NT$ 1000</span></div>
+                    <div class="text-gray-500 text-right pt-2 text-sm">使用優惠碼節省了 <span class="text-accent">NT$ {{ calculateSavings }}</span></div>
                 </div>
                 <div class="mt-10 border-b border-[#cccccc] pb-5 flex justify-between">
                     <div class="text-xl">總金額 </div>
